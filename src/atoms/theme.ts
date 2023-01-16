@@ -13,6 +13,6 @@ export const colorPalette = atom<ColorPalette | undefined>({
 
 export const darkMode = atom<boolean>({
     key: `darkMode`,
-    default: true, //Boolean(window.matchMedia(`(prefers-color-scheme: dark)`).matches),
+    default: false, //Boolean(window.matchMedia(`(prefers-color-scheme: dark)`).matches),
     effects_UNSTABLE: [persistAtom],
 });

@@ -4,31 +4,33 @@ import {
     createTheme,
     responsiveFontSizes,
     StyledEngineProvider,
-    ThemeProvider as MuiThemeProvider
+    ThemeProvider as MuiThemeProvider,
 } from '@mui/material/styles';
-import { useMemo } from 'react';
-import { useRecoilValue } from 'recoil';
+import React, { useMemo } from 'react';
 
 import Overrides from '@/theme/overrides';
-import Typography from '@/theme/typography';
-import atom from '@/atoms/atoms';
+import Palette from '@/theme/palette';
+import TypographyOverride from '@/theme/typography';
 
 export const drawerWidth = 420;
+export const largeDesktopBreakpoint: Breakpoint = `lg`;
 export const desktopBreakpoint: Breakpoint = `md`;
+export const tabletBreakpoint: Breakpoint = `sm`;
 
 export default function ThemeProvider ({ children }: { children: JSX.Element }) {
-    const darkMode = useRecoilValue(atom.darkMode);
-
     const theme = useMemo(() => {
+        // eslint-disable-next-line putout/object-property-newline
+        const shape = { borderRadius: 0 };
+
         const basicTheme = createTheme({
             components: Overrides(),
-            palette: { mode: darkMode ? `dark` : `light`, }, //Palette(darkMode ? `dark` : `light`),
-            shape: { borderRadius: 6 },
-            typography: Typography(),
+            palette: Palette(`light`),
+            shape,
+            typography: TypographyOverride(),
         });
-        
+
         return responsiveFontSizes(basicTheme);
-    }, [darkMode]);
+    }, []);
 
     return (
         <StyledEngineProvider injectFirst>
@@ -36,7 +38,7 @@ export default function ThemeProvider ({ children }: { children: JSX.Element }) 
                 <GlobalStyles
                     styles={{
                         ':root': {
-                            '--App-navRail-width': String(theme.spacing(30)),
+                            '--App-navRail-width': String(theme.spacing(10)),
                             '--App-helpDrawer-width': `${drawerWidth}px`,
                             '--App-header-height': String(theme.spacing(9)),
                         },

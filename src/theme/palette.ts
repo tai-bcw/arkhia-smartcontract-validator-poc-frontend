@@ -1,10 +1,9 @@
+import {
+    applyTheme,
+    argbFromHex,
+    themeFromSourceColor,
+} from '@material/material-color-utilities';
 import { alpha, PaletteOptions } from '@mui/material/styles';
-
-// #ED3D63
-// #223CCF
-// #161B7F
-// #8D3FD0
-// #0683D7
 
 declare module '@mui/material/styles/createPalette' {
     interface ColorRange {
@@ -110,6 +109,21 @@ const red = {
 // more resources about generating color palettes based on Material Design: https://material.io/blog/science-of-color-design
 
 export default function Palette (mode: `light` | `dark`): PaletteOptions {
+
+    const themeColors = themeFromSourceColor(argbFromHex(primaryBlueDark.main), [
+        {
+            name: `accent-1`,
+            value: argbFromHex(primaryOrange.main),
+            blend: true,
+        }
+    ]);
+
+    // Print out the theme as JSON
+    // console.log(JSON.stringify(themeColors, null, 2));
+    applyTheme(themeColors, {
+        target: document.getElementById(`root`) ?? document.body, dark: mode === `dark` ?? false
+    });
+
     return {
         mode,
         primary: {
@@ -159,31 +173,3 @@ export default function Palette (mode: `light` | `dark`): PaletteOptions {
         warning: primaryOrange
     };
 }
-
-// --md-sys-color-primary: #405aa9;
-// --md-sys-color-on-primary: #ffffff;
-// --md-sys-color-primary-container: #dae1ff;
-// --md-sys-color-on-primary-container: #001550;
-// --md-sys-color-secondary: #595e72;
-// --md-sys-color-on-secondary: #ffffff;
-// --md-sys-color-secondary-container: #dde1f9;
-// --md-sys-color-on-secondary-container: #161b2c;
-// --md-sys-color-tertiary: #745470;
-// --md-sys-color-on-tertiary: #ffffff;
-// --md-sys-color-tertiary-container: #ffd6f7;
-// --md-sys-color-on-tertiary-container: #2b122a;
-// --md-sys-color-error: #ba1b1b;
-// --md-sys-color-on-error: #ffffff;
-// --md-sys-color-error-container: #ffdad4;
-// --md-sys-color-on-error-container: #410001;
-// --md-sys-color-background: #fefbff;
-// --md-sys-color-on-background: #1b1b1f;
-// --md-sys-color-surface: #fefbff;
-// --md-sys-color-on-surface: #1b1b1f;
-// --md-sys-color-surface-variant: #e2e2ed;
-// --md-sys-color-on-surface-variant: #45464f;
-// --md-sys-color-outline: #75767f;
-// --md-sys-color-shadow: #000000;
-// --md-sys-color-inverse-surface: #303033;
-// --md-sys-color-inverse-on-surface: #f3f0f5;
-// --md-sys-color-inverse-primary: #b4c5ff;

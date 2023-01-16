@@ -1,67 +1,84 @@
-import HomeIcon from '@mui/icons-material/Home';
-import Stack from "@mui/material/Stack";
-import {
-    styled,
-    useTheme
-} from '@mui/material/styles';
-import Typography from "@mui/material/Typography";
+import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { SnackbarProvider } from "notistack";
+import { SnackbarProvider } from 'notistack';
 import React, {
     useEffect,
     useState
-} from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import VerifiedIcon from '@mui/icons-material/Verified';
+} from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ApprovalIcon from '@mui/icons-material/Approval';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 import { desktopBreakpoint } from '@/providers/themeProvider';
-import NavigationRailAction from "@/components/NavigationRail/NavigationRailItem";
-import NavigationRail from "@/components/NavigationRail/NavigationRail";
-import NavBar, { GrowingDiv } from "@/components/NavBar/NavBar";
-import Logo from "@/assets/Logo/Logo";
+import NavigationRailAction, { GrowingDisabledNavButton } from '@/components/NavigationRail/NavigationRailItem';
+import NavigationRail from '@/components/NavigationRail/NavigationRail';
+import NavBar, { GrowingDiv } from '@/components/NavBar/NavBar';
+import { ImgLogo } from '@/assets/Logo/Logo';
+import ArkhiaTypefaceLight from '@/assets/branding/arkhia-typeface-light.png';
+import ArkhiaGlyphDark from '@/assets/branding/arkhia-glyph-dark.png';
 import { sitemap } from '@/routes/sitemap';
 
 const StyledSnackbarProvider = styled(`div`)(({ theme }) => ({
-    [theme.breakpoints.up(desktopBreakpoint)]: { "& .SnackbarContainer-top": { top: `76px !important` }, },
-    "& .SnackbarContainer-bottom": { bottom: `76px !important` }
+    [theme.breakpoints.up(desktopBreakpoint)]: { '& .SnackbarContainer-top': { top: `76px !important` } },
+    '& .SnackbarContainer-bottom': { bottom: `76px !important` },
 }));
 
-const RootDiv = styled(`div`)(({
+const RootDiv = styled(`div`)({
     display: `flex`,
     overflowX: `hidden`,
     width: `100%`,
-}));
-
-const NetworkIconProps = {
-    height: 18,
-    width: 18,
-    ml: {
-        xs: 0,
-        sm: 0.5
-    },
-    mt: { xs: 0.5 },
-    mb: { xs: 0.5 }
-};
+});
 
 export default function AppFrame ({ children }: { children: React.ReactNode }) {
-    const { pathname } = useLocation();
     const navigate = useNavigate();
+    const { pathname } = useLocation();
+
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up(desktopBreakpoint));
 
-    const [activePage, setActivePage] = useState(`/home`);
+    const [activePage, setActivePage] = useState(`/`);
 
     useEffect(() => {
-        if (pathname === `/`) return;
+        let parsedPath;
 
-        const parsedPath = `/${pathname.split(`/`)[1]}`;
+        if (pathname === sitemap.INDEX) {
+            parsedPath = sitemap.INDEX;
+        } else {
+            parsedPath = `/${pathname.split(`/`)[1]}`;
+        }
+
         setActivePage(parsedPath);
     }, [pathname]);
 
     const handleClick = (event: React.SyntheticEvent, newValue: string) => {
+        setActivePage(newValue);
         navigate(newValue);
     };
+
+    type GrowingDisabledNavButton = `growingDisabledNavButton`;
+    const growingDisabledNavButton: GrowingDisabledNavButton = `growingDisabledNavButton`;
+
+    const navigationButtons = [
+        {
+            route: sitemap.HOME,
+            isLogo: true,
+            icon: <ImgLogo alt="[A]" height={24} src={ArkhiaGlyphDark} />,
+        },
+        ...(!isDesktop ? [growingDisabledNavButton] : []),
+        {
+            route: sitemap.CLAIM,
+            isLogo: false,
+            icon: <ApprovalIcon />,
+            label: `Claim`,
+        },
+        {
+            route: sitemap.VERIFY,
+            isLogo: false,
+            icon: <VerifiedIcon />,
+            label: `Verify`,
+            sx: { borderBottomWidth: `thin` },
+        },
+    ];
 
     return (
         <StyledSnackbarProvider>
@@ -69,60 +86,34 @@ export default function AppFrame ({ children }: { children: React.ReactNode }) {
                 preventDuplicate
                 anchorOrigin={{
                     vertical: isDesktop ? `top` : `bottom`,
-                    horizontal: isDesktop ? `right` : `center`
+                    horizontal: isDesktop ? `right` : `center`,
                 }}
                 maxSnack={5}
             >
                 <RootDiv>
-                    <NavBar
-                        position="fixed"
-                        sx={{
-                            px: 3,
-                            borderLeft: 0
-                        }}
-                    >
-                        <>
-                            <Typography
-                                color={theme.palette.text.primary}
-                                component="h1"
-                                sx={{
-                                    textTransform: `capitalize`,
-                                    fontWeight: 600
-                                }}
-                                variant="h6"
-                            >
-                                { location.pathname.substring(1).split(`/`)[0] }
-                            </Typography>
-                            <GrowingDiv />
-                            <Stack direction="row" spacing={1} />
-                        </>
+                    <NavBar position="fixed">
+                        <ImgLogo alt="Arkhia" height={18} src={ArkhiaTypefaceLight} />
+                        <GrowingDiv />
                     </NavBar>
-                    <NavigationRail
-                        showLabels
-                        onChange={handleClick}
-                        value={activePage}
-                    >
-                        <Logo />
-                        { !isDesktop && <GrowingDiv />}
-                        <NavigationRailAction
-                            icon={<HomeIcon />}
-                            label="Home"
-                            value={sitemap.HOME}
-                        />
-                        <NavigationRailAction
-                            icon={<ApprovalIcon />}
-                            label="Claim Contract"
-                            sx={{ borderBottomWidth: `thin` }}
-                            value={sitemap.CLAIM}
-                        />
-                        <NavigationRailAction
-                            icon={<VerifiedIcon />}
-                            label="Verify Contract"
-                            sx={{ borderBottomWidth: `thin` }}
-                            value={sitemap.VERIFY}
-                        />
+                    <NavigationRail showLabels onChange={handleClick} value={activePage}>
+                        {navigationButtons.map((button) => {
+                            if (button !== growingDisabledNavButton) {
+                                return (
+                                    <NavigationRailAction
+                                        key={button.route}
+                                        icon={button.icon}
+                                        isLogo={button.isLogo}
+                                        label={button.label}
+                                        sx={button.sx}
+                                        value={button.route}
+                                    />
+                                );
+                            }
+
+                            return <GrowingDisabledNavButton key="growing-disabled-btn" disabled />;
+                        })}
                     </NavigationRail>
-                    { children }
+                    {children}
                 </RootDiv>
             </SnackbarProvider>
         </StyledSnackbarProvider>

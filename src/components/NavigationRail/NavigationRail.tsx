@@ -1,17 +1,18 @@
 import BottomNavigation, { BottomNavigationProps } from "@mui/material/BottomNavigation";
 import { styled } from "@mui/material/styles";
+
 import { desktopBreakpoint } from '@/providers/themeProvider';
 
 const VerticalNavigationRail = styled(BottomNavigation)<BottomNavigationProps>(({ theme }) => ({
+    border: `none`,
     flexDirection: `row`,
     justifyContent: `space-between`,
-    alignItems: `center`,
     height: `var(--App-appBar-height)`,
     minWidth: `100%`,
     position: `fixed`,
     bottom: 0,
+    background: theme.palette.primary.main,
     zIndex: theme.zIndex.drawer + 1,
-    borderTop: `1px solid ${theme.palette.divider}`,
     [theme.breakpoints.up(desktopBreakpoint)]: {
         flexDirection: `column`,
         justifyContent: `flex-start`,
@@ -21,7 +22,7 @@ const VerticalNavigationRail = styled(BottomNavigation)<BottomNavigationProps>((
         top: 0,
         bottom: 0,
         left: 0,
-        borderRight: `1px solid ${theme.palette.divider}`,
+        background: theme.palette.primary.main,
     }
 }));
 
@@ -35,7 +36,7 @@ const Nav = styled(`nav`)(({ theme }) => ({
 export default function NavigationRail (props: BottomNavigationProps) {
 
     return (
-        <Nav aria-label={`navigation`}>
+        <Nav aria-label="navigation">
             <VerticalNavigationRail
                 {...props}
             />

@@ -10,11 +10,14 @@ interface AppBarProps extends MuiAppBarProps {
 }
 
 const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== `open` && prop !== `isInner` })<AppBarProps>(({ theme, open, isInner }) => ({
-    border: `1px solid ${theme.palette.divider}`,
-    boxShadow: isInner ? `none` : undefined,
-    backdropFilter: `blur(8px)`,
+    boxShadow: isInner ? `none` : theme.shadows[2],
+    backdropFilter: `blur(20px)`,
     borderColor: isInner ? theme.palette.grey[400] : undefined,
-    background: `transparent`,
+    borderStyle: `solid`,
+    borderWidth: 0,
+    borderBottomWidth: `thin`,
+    background: `rgba(255,255,255,0.7)`,
+    color: theme.palette.grey[800],
     height: `var(--App-header-height)`,
     justifyContent: `center`,
     padding: theme.spacing(0,2),
@@ -44,9 +47,9 @@ export default function NavBar (props: AppBarProps) {
     const { children, ...other } = props;
 
     return (
-        <AppBar {...other} elevation={0}>
+        <AppBar {...other}>
             <Toolbar disableGutters variant="dense">
-                { children }
+                {children}
             </Toolbar>
         </AppBar>
     );

@@ -1,32 +1,31 @@
 import BottomNavigationAction, { BottomNavigationActionProps } from "@mui/material/BottomNavigationAction";
 import { alpha, styled } from "@mui/material/styles";
 
-import { desktopBreakpoint } from "@/providers/themeProvider";
-
 const VerticalNavigationRailAction = styled(BottomNavigationAction, { shouldForwardProp: (prop) => prop !== `isLogo` })<Props>(({ theme, isLogo }) => ({
-    padding: theme.spacing(2),
-    borderRadius: isLogo ? `unset` : 64,
+    padding: theme.spacing(1),
+    borderColor: alpha(`#FFF`, 0.1),
+    borderStyle: `solid`,
+    borderWidth: 0,
     borderTopWidth: isLogo ? 0 : `thin`,
-    minHeight: isLogo ? `var(--App-header-height)` : theme.spacing(6),
-    maxHeight: isLogo ? `var(--App-header-height)` : theme.spacing(6),
-    "&.Mui-selected": { backgroundColor: isLogo ? undefined : alpha(theme.palette.primary.light, 0.1), },
+    maxWidth: `var(--App-navRail-width)`,
+    minWidth: `var(--App-navRail-width)`,
+    minHeight: `var(--App-header-height)`,
+    maxHeight: `var(--App-header-height)`,
+    color: `#FFF`,
+    "&.Mui-selected": {
+        backgroundColor: isLogo ? undefined : `rgba(255,255,255,0.1)`,
+        color: `#FFF`
+    },
     "& .MuiBottomNavigationAction-label": {
-        paddingLeft: theme.spacing(0),
-        fontWeight: 600,
+        paddingTop: theme.spacing(0.5),
+        color: `inherit`,
+        fontWeight: 500,
     },
-    "& .MuiSvgIcon-root": { color: `inherit`, },
-    [theme.breakpoints.up(desktopBreakpoint)]: {
-        maxWidth: `calc(var(--App-navRail-width) - ${theme.spacing(isLogo ? 3 : 4)})`,
-        minWidth: `calc(var(--App-navRail-width) - ${theme.spacing(isLogo ? 3 : 4)})`,
-        minHeight: isLogo ? `var(--App-header-height)` : theme.spacing(7),
-        maxHeight: isLogo ? `var(--App-header-height)` : theme.spacing(7),
-        flexDirection: `row`,
-        alignItems: `center`,
-        justifyContent: `flex-start`,
-        "& .MuiBottomNavigationAction-label": { paddingLeft: theme.spacing(2) },
-        // "& .MuiSvgIcon-root": { margin: theme.spacing(1) },
-    },
+    "& .MuiSvgIcon-root": { color: `inherit` },
+    "&:hover": { backgroundColor: theme.palette.primary.dark },
 }));
+
+export const GrowingDisabledNavButton = styled(BottomNavigationAction)<Props>(() => ({ flex: `1 1 auto`, }));
 
 interface Props extends BottomNavigationActionProps {
     isLogo?: boolean;
